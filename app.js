@@ -15,8 +15,19 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
 
+const posts=[];
+
 app.get("/", (req, res) => {
-  res.render("home",{StartingContent:homeStartingContent});
+  res.render("home",{StartingContent:homeStartingContent, posts:posts});
+});
+
+app.get("/posts/:postName", (req, res) => {
+  for(i=0; i<posts.length; i++) {
+    if(posts[i].title===req.params.postName){
+      console.log("match found")
+    };
+  }
+  
 });
 
 app.get("/about", (req, res) => {
@@ -29,6 +40,12 @@ app.get("/contact", (req, res) => {
 
 app.get("/compose", (req, res) => {
   res.render("compose");
+})
+
+app.post('/compose', (req, res) => {
+  const post={title:req.body.postTitle,content:req.body.postBody};
+  posts.push(post);
+  res.redirect("/");
 })
 
 
